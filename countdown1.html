@@ -1,52 +1,94 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Countdown</title>
-<style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    margin: 0; padding: 0;
-    display: flex; justify-content: center; align-items: center;
-    height: 100vh;
-    background-color: #fff;
-    color: #523D1F;
-    font-size: 2rem;
-  }
-  #countdown {
-    text-align: center;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Countdown</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    #countdown-text {
+      font-size: 1.5rem;
+      color: #523D1F;
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 320px;
+      user-select: none;
+    }
+    .countdown {
+      background: #523D1F;
+      color: white;
+      padding: 30px 50px;
+      border-radius: 15px;
+      font-size: 2rem;
+      text-align: center;
+      user-select: none;
+      min-width: 300px;
+    }
+    .countdown div {
+      margin: 8px 0;
+    }
+  </style>
 </head>
 <body>
-<div id="countdown">Lädt...</div>
+
+<div id="countdown-text">
+  Dein individueller Countdown läuft bis zum Ereignis:
+</div>
+
+<div class="countdown" id="countdown">
+  <div><span id="days">00</span> Tage</div>
+  <div><span id="hours">00</span> Stunden</div>
+  <div><span id="minutes">00</span> Minuten</div>
+  <div><span id="seconds">00</span> Sekunden</div>
+</div>
 
 <script>
-  // Setze hier das Enddatum (Format: YYYY-MM-DDTHH:MM:SS)
-  const targetDate = new Date("2025-12-31T23:59:59").getTime();
+  // Hier das Ziel-Enddatum einstellen (YYYY, M-1, D, H, M, S)
+  // Beispiel: 2025, 6 (Juli), 15, 12:00:00 Uhr
+  const targetDate = new Date(2025, 6, 15, 12, 0, 0);
 
   function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+    const now = new Date();
+    const diff = targetDate - now;
 
-    if (distance < 0) {
-      document.getElementById("countdown").innerHTML = "Zeit abgelaufen!";
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML = '<strong>Zeit abgelaufen!</strong>';
       clearInterval(interval);
       return;
     }
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000*60*60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000*60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours   = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    document.getElementById("countdown").innerHTML =
-      days + " Tage " + hours + " Std. " + minutes + " Min. " + seconds + " Sek.";
+    document.getElementById('days').textContent    = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent   = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
   }
 
-  updateCountdown();
+  updateCountdown(); // sofort beim Laden
   const interval = setInterval(updateCountdown, 1000);
 </script>
+
 </body>
 </html>
+<script>
+  function sendHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ height: height }, "*");
+  }
+
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+</script>
