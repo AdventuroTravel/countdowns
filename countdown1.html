@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
-      background: #f0f0f0;
+      background: transparent;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,9 +24,9 @@
       user-select: none;
     }
     .countdown {
-      background: #523D1F;
-      color: white;
-      padding: 30px 50px;
+      background: transparent;
+      color: #523D1F;
+      padding: 20px;
       border-radius: 15px;
       font-size: 2rem;
       text-align: center;
@@ -52,8 +52,7 @@
 </div>
 
 <script>
-  // Hier das Ziel-Enddatum einstellen (YYYY, M-1, D, H, M, S)
-  // Beispiel: 2025, 6 (Juli), 15, 12:00:00 Uhr
+  // Ziel-Enddatum einstellen (YYYY, M-1, D, H, M, S)
   const targetDate = new Date(2025, 6, 15, 12, 0, 0);
 
   function updateCountdown() {
@@ -77,13 +76,9 @@
     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
   }
 
-  updateCountdown(); // sofort beim Laden
+  updateCountdown();
   const interval = setInterval(updateCountdown, 1000);
-</script>
 
-</body>
-</html>
-<script>
   function sendHeight() {
     const height = document.body.scrollHeight;
     window.parent.postMessage({ height: height }, "*");
@@ -92,3 +87,6 @@
   window.addEventListener('load', sendHeight);
   window.addEventListener('resize', sendHeight);
 </script>
+
+</body>
+</html>
